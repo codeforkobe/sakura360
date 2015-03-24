@@ -1,3 +1,4 @@
+del = require 'del'
 fs = require 'fs'
 gulp = require 'gulp'
 Handlebars = require 'handlebars'
@@ -74,5 +75,10 @@ write = (file, data) ->
 
 gulp.task 'build', ->
   generateSite generateSiteData()
+
+gulp.task 'clean', (done) ->
+  del [
+    './public'
+  ], done
 
 gulp.task 'default', ['build']
