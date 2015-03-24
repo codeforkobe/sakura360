@@ -81,4 +81,9 @@ gulp.task 'clean', (done) ->
     './public'
   ], done
 
-gulp.task 'default', ['build']
+gulp.task 'default', (done) ->
+  run.apply run, [
+    'clean'
+    'build'
+    done
+  ]
