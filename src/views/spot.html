@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>{{name}} - sakura360</title>
+</head>
+<body>
+  <h1>sakura360</h1>
+  <h2>{{name}}</h2>
+  {{#if photos}}
+  <ul>
+    {{#each photos}}
+    <li><img src="{{url}}" /></li>
+    {{/each}}
+  </ul>
+  {{/if}}
+</body>
+</html>

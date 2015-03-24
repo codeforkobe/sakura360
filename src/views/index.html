@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>sakura360</title>
+</head>
+<body>
+  <h1>sakura360</h1>
+  {{#if spots}}
+  <ul>
+    {{#each spots}}
+    <li><a href="/{{id}}/">{{name}}</a></li>
+    {{/each}}
+  </ul>
+  {{/if}}
+</body>
+</html>
