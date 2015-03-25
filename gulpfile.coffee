@@ -105,6 +105,14 @@ gulp.task 'deploy', ['clean'], ->
   .then ({ stdout, stderr }) ->
     gutil.log stdout
     gutil.log stderr
+    execPromise "git config --local user.name circleci", cwd: dir
+  .then ({ stdout, stderr }) ->
+    gutil.log stdout
+    gutil.log stderr
+    execPromise "git config --local user.email circleci@example.com", cwd: dir
+  .then ({ stdout, stderr }) ->
+    gutil.log stdout
+    gutil.log stderr
     execPromise "git commit --message '#{message}'", cwd: dir
   .then ({ stdout, stderr }) ->
     gutil.log stdout
