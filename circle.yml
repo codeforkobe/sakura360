@@ -1,0 +1,9 @@
+machine:
+  node:
+    version: 0.12.0
+deployment:
+  production:
+    owner: codeforkobe
+    branch: master
+    commands:
+      - npm run deploy
