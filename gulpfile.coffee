@@ -1,10 +1,19 @@
 del = require 'del'
 fs = require 'fs'
 gulp = require 'gulp'
+gutil = require 'gulp-util'
 Handlebars = require 'handlebars'
 mkdirp = require 'mkdirp'
 moment = require 'moment'
 path = require 'path'
+{exec} = require 'child_process'
+{Promise} = require 'es6-promise'
+
+execPromise = (command, options) ->
+  new Promise (resolve, reject) ->
+    exec command, options, (err, stdout, stderr) ->
+      return reject(err) if err?
+      resolve { stdout, stderr }
 
 generateSiteData = ->
   spots = [
@@ -80,6 +89,30 @@ gulp.task 'clean', (done) ->
   del [
     './public'
   ], done
+
+gulp.task 'deploy', ['clean'], ->
+  message = moment().format() # commit message
+  url = 'git@github.com:codeforkobe/sakura360.git' # repository url
+  dst = 'gh-pages'
+  dir = './public'
+
+  execPromise "git clone --branch #{dst} #{url} #{dir}"
+  .then ({ stdout, stderr }) ->
+    gutil.log stdout
+    gutil.log stderr
+    generateSite generateSiteData()
+    execPromise 'git add --all', cwd: dir
+  .then ({ stdout, stderr }) ->
+    gutil.log stdout
+    gutil.log stderr
+    execPromise "git commit --message '#{message}'", cwd: dir
+  .then ({ stdout, stderr }) ->
+    gutil.log stdout
+    gutil.log stderr
+    execPromise "git push --force '#{url}' #{dst}:#{dst}", cwd: dir
+  .then ({ stdout, stderr }) ->
+    gutil.log stdout
+    gutil.log stderr
 
 gulp.task 'default', (done) ->
   run.apply run, [
