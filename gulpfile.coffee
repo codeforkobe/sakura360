@@ -77,8 +77,9 @@ generateSite = (site) ->
     (path.join(dir, f) for f in files when not f.match(/^_/)).reduce (paths, p) ->
       paths.concat(if fs.statSync(p).isDirectory() then getFiles(p) else [p])
     , []
-  files = getFiles './src'
-  gulp.src files
+  srcDir = './src'
+  files = getFiles srcDir
+  gulp.src files, base: srcDir
     .pipe gulp.dest './public'
 
 render = (layout, data) ->
