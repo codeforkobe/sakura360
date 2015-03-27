@@ -71,8 +71,18 @@ generateSite = (site) ->
     .replace /\/$/, '/index.html'
     write filePath, render 'spot', spot
 
+  # render other files
+  getFiles = (dir) ->
+    files = fs.readdirSync dir
+    (path.join(dir, f) for f in files when not f.match(/^_/)).reduce (paths, p) ->
+      paths.concat(if fs.statSync(p).isDirectory() then getFiles(p) else [p])
+    , []
+  files = getFiles './src'
+  gulp.src files
+    .pipe gulp.dest './public'
+
 render = (layout, data) ->
-  view = fs.readFileSync "./src/views/#{layout}.html", encoding: 'utf-8'
+  view = fs.readFileSync "./src/_views/#{layout}.html", encoding: 'utf-8'
   template = Handlebars.compile view
   template data
 
