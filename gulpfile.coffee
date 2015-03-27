@@ -136,7 +136,6 @@ gulp.task 'deploy', ['clean'], ->
   .then ({ stdout, stderr }) ->
     gutil.log stdout
     gutil.log stderr
-  .catch gutil.log
 
 gulp.task 'default', (done) ->
   run.apply run, [
