@@ -77,10 +77,13 @@ generateSite = (site) ->
     (path.join(dir, f) for f in files when not f.match(/^_/)).reduce (paths, p) ->
       paths.concat(if fs.statSync(p).isDirectory() then getFiles(p) else [p])
     , []
-  srcDir = './src'
-  files = getFiles srcDir
-  gulp.src files, base: srcDir
-    .pipe gulp.dest './public'
+  new Promise (resolve, reject) ->
+    srcDir = './src'
+    files = getFiles srcDir
+    gulp.src files, base: srcDir
+      .pipe gulp.dest './public'
+      .on 'end', -> resolve()
+      .on 'error', reject
 
 render = (layout, data) ->
   view = fs.readFileSync "./src/_views/#{layout}.html", encoding: 'utf-8'
@@ -112,6 +115,7 @@ gulp.task 'deploy', ['clean'], ->
     gutil.log stdout
     gutil.log stderr
     generateSite generateSiteData()
+  .then ->
     execPromise 'git add --all', cwd: dir
   .then ({ stdout, stderr }) ->
     gutil.log stdout
@@ -132,6 +136,7 @@ gulp.task 'deploy', ['clean'], ->
   .then ({ stdout, stderr }) ->
     gutil.log stdout
     gutil.log stderr
+  .catch gutil.log
 
 gulp.task 'default', (done) ->
   run.apply run, [
