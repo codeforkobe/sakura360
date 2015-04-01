@@ -1,7 +1,7 @@
 {Promise} = require 'es6-promise'
 buildSite = require './src/_scripts/build-site'
 del = require 'del'
-exec = require './src/_scripts/exec'
+deploy = require './src/_scripts/deploy'
 getData = require './src/_scripts/get-data'
 getFiles = require './src/_scripts/get-files'
 gulp = require 'gulp'
@@ -36,34 +36,12 @@ gulp.task 'deploy', ['clean'], ->
   url = 'git@github.com:codeforkobe/sakura360.git' # repository url
   dst = 'gh-pages'
   dir = './public'
-
-  exec "git clone --branch #{dst} #{url} #{dir}"
-  .then ({ stdout, stderr }) ->
-    gutil.log stdout
-    gutil.log stderr
+  name = 'circleci'
+  email = 'circleci@example.com'
+  build = ->
     getData()
     .then buildSite
-  .then ->
-    exec 'git add --all', cwd: dir
-  .then ({ stdout, stderr }) ->
-    gutil.log stdout
-    gutil.log stderr
-    exec "git config --local user.name circleci", cwd: dir
-  .then ({ stdout, stderr }) ->
-    gutil.log stdout
-    gutil.log stderr
-    exec "git config --local user.email circleci@example.com", cwd: dir
-  .then ({ stdout, stderr }) ->
-    gutil.log stdout
-    gutil.log stderr
-    exec "git commit --message '#{message}'", cwd: dir
-  .then ({ stdout, stderr }) ->
-    gutil.log stdout
-    gutil.log stderr
-    exec "git push --force '#{url}' #{dst}:#{dst}", cwd: dir
-  .then ({ stdout, stderr }) ->
-    gutil.log stdout
-    gutil.log stderr
+  deploy { message, url, dst, dir, name, email, build }
 
 gulp.task 'default', (done) ->
   run = require 'run-sequence'
