@@ -3,6 +3,7 @@ data = require './src/_scripts/data'
 del = require 'del'
 exec = require './src/_scripts/exec'
 fs = require 'fs'
+getFiles = require './src/_scripts/get-files'
 gulp = require 'gulp'
 gutil = require 'gulp-util'
 Handlebars = require 'handlebars'
@@ -26,12 +27,6 @@ generateSite = (site) ->
     .replace /\/$/, '/index.html'
     write filePath, render 'spot', spot
 
-  # render other files
-  getFiles = (dir) ->
-    files = fs.readdirSync dir
-    (path.join(dir, f) for f in files when not f.match(/^_/)).reduce (paths, p) ->
-      paths.concat(if fs.statSync(p).isDirectory() then getFiles(p) else [p])
-    , []
   new Promise (resolve, reject) ->
     srcDir = './src'
     files = getFiles srcDir
