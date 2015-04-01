@@ -1,41 +1,30 @@
 {Promise} = require 'es6-promise'
-getData = require './src/_scripts/get-data'
+buildSite = require './src/_scripts/build-site'
 del = require 'del'
 exec = require './src/_scripts/exec'
+getData = require './src/_scripts/get-data'
 getFiles = require './src/_scripts/get-files'
 gulp = require 'gulp'
 gutil = require 'gulp-util'
 moment = require 'moment'
-render = require './src/_scripts/render'
-write = require './src/_scripts/write'
 
-generateSite = (site) ->
-  # render index html
-  write './public/index.html', render 'index', site
+gulp.task 'build', (done) ->
+  run = require 'run-sequence'
+  run.apply run, [
+    'build-site'
+    'copy-files'
+    done
+  ]
 
-  # render spot html
-  site.spots.forEach (spot) ->
-    d = moment spot.created_at
-    pattern = '/:year/:id/'
-    params = {}
-    params[':year'] = d.year()
-    params[':id'] = spot.id
-    filePath = './public' + pattern.replace /:([^\/]+)/g, (param) ->
-      params[param]
-    .replace /\/$/, '/index.html'
-    write filePath, render 'spot', spot
-
-  new Promise (resolve, reject) ->
-    srcDir = './src'
-    files = getFiles srcDir
-    gulp.src files, base: srcDir
-      .pipe gulp.dest './public'
-      .on 'end', -> resolve()
-      .on 'error', reject
-
-gulp.task 'build', ->
+gulp.task 'build-site', ->
   getData()
-  .then generateSite
+  .then buildSite
+
+gulp.task 'copy-files', ->
+  srcDir = './src'
+  files = getFiles srcDir
+  gulp.src files, base: srcDir
+    .pipe gulp.dest './public'
 
 gulp.task 'clean', (done) ->
   del [
@@ -53,7 +42,7 @@ gulp.task 'deploy', ['clean'], ->
     gutil.log stdout
     gutil.log stderr
     getData()
-    .then generateSite
+    .then buildSite
   .then ->
     exec 'git add --all', cwd: dir
   .then ({ stdout, stderr }) ->
