@@ -8,6 +8,7 @@ moment = require 'moment'
 path = require 'path'
 {exec} = require 'child_process'
 {Promise} = require 'es6-promise'
+getSpots = require './src/_scripts/get-spots'
 
 execPromise = (command, options) ->
   new Promise (resolve, reject) ->
@@ -15,45 +16,48 @@ execPromise = (command, options) ->
       return reject(err) if err?
       resolve { stdout, stderr }
 
+generateSpots = ->
+  config =
+    email: process.env.SAKURA360_SPOT_SHEET_EMAIL
+    key: JSON.parse process.env.SAKURA360_SPOT_SHEET_KEY
+    sheetKey: process.env.SAKURA360_SPOT_SHEET_SHEET_KEY
+  getSpots config
+
 generateSiteData = ->
-  spots = [
-    id: 'syukugawa'
-    name: '夙川公園'
-    photos: []
-  ,
-    id: 'ojizoo'
-    name: '王子動物園'
-    photos: []
-  ]
+  spots = null
 
-  photos = [
-    spot_id: 'ojizoo'
-    type: 'theta'
-    author: 'bouzuya'
-    created_at: new Date(moment().valueOf())
-    url: 'http://example.com/ozizoo.jpg'
-  ]
+  generateSpots()
+  .then (s) ->
+    spots = s
+  .then ->
+    photos = [
+      spot_id: 'ojizoo'
+      type: 'theta'
+      author: 'bouzuya'
+      created_at: new Date(moment().valueOf())
+      url: 'http://example.com/ozizoo.jpg'
+    ]
 
-  # merge photos to spots.photos
-  photos.forEach (photo) ->
-    spot = spots.filter((spot) -> spot.id is photo.spot_id)[0]
-    return unless spot?
-    spot.photos.push photo
+    # merge photos to spots.photos
+    photos.forEach (photo) ->
+      spot = spots.filter((spot) -> spot.id is photo.spot_id)[0]
+      return unless spot?
+      spot.photos.push photo
 
-  # sort spots.photos
-  spots.forEach (spot) ->
-    spot.photos.sort (a, b) ->
-      ad = moment a.created_at
-      bd = moment b.created_at
-      if ad.isBefore bd
-        -1
-      else if ad.isAfter bd
-        1
-      else
-        0
+    # sort spots.photos
+    spots.forEach (spot) ->
+      spot.photos.sort (a, b) ->
+        ad = moment a.created_at
+        bd = moment b.created_at
+        if ad.isBefore bd
+          -1
+        else if ad.isAfter bd
+          1
+        else
+          0
 
-  # build site data
-  site = { spots }
+    # build site data
+    site = { spots }
 
 generateSite = (site) ->
   # render index html
@@ -97,7 +101,8 @@ write = (file, data) ->
   fs.writeFileSync filePath, data, encoding: 'utf-8'
 
 gulp.task 'build', ->
-  generateSite generateSiteData()
+  generateSiteData()
+  .then generateSite
 
 gulp.task 'clean', (done) ->
   del [
@@ -114,7 +119,8 @@ gulp.task 'deploy', ['clean'], ->
   .then ({ stdout, stderr }) ->
     gutil.log stdout
     gutil.log stderr
-    generateSite generateSiteData()
+    generateSiteData()
+    .then generateSite
   .then ->
     execPromise 'git add --all', cwd: dir
   .then ({ stdout, stderr }) ->
@@ -138,6 +144,7 @@ gulp.task 'deploy', ['clean'], ->
     gutil.log stderr
 
 gulp.task 'default', (done) ->
+  run = require 'run-sequence'
   run.apply run, [
     'clean'
     'build'
