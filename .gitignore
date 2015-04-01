@@ -1,3 +1,4 @@
 *.log
+.envrc
 node_modules
 public
