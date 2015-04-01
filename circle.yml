@@ -7,6 +7,6 @@ test:
 deployment:
   production:
     owner: codeforkobe
-    branch: master
+    branch: deployment/production
     commands:
       - npm run deploy
