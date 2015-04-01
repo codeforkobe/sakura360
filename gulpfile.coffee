@@ -1,5 +1,5 @@
 {Promise} = require 'es6-promise'
-data = require './src/_scripts/data'
+getData = require './src/_scripts/get-data'
 del = require 'del'
 exec = require './src/_scripts/exec'
 getFiles = require './src/_scripts/get-files'
@@ -34,7 +34,7 @@ generateSite = (site) ->
       .on 'error', reject
 
 gulp.task 'build', ->
-  data()
+  getData()
   .then generateSite
 
 gulp.task 'clean', (done) ->
@@ -52,7 +52,7 @@ gulp.task 'deploy', ['clean'], ->
   .then ({ stdout, stderr }) ->
     gutil.log stdout
     gutil.log stderr
-    data()
+    getData()
     .then generateSite
   .then ->
     exec 'git add --all', cwd: dir
