@@ -2,13 +2,11 @@
 data = require './src/_scripts/data'
 del = require 'del'
 exec = require './src/_scripts/exec'
-fs = require 'fs'
 getFiles = require './src/_scripts/get-files'
 gulp = require 'gulp'
 gutil = require 'gulp-util'
-Handlebars = require 'handlebars'
 moment = require 'moment'
-path = require 'path'
+render = require './src/_scripts/render'
 write = require './src/_scripts/write'
 
 generateSite = (site) ->
@@ -34,11 +32,6 @@ generateSite = (site) ->
       .pipe gulp.dest './public'
       .on 'end', -> resolve()
       .on 'error', reject
-
-render = (layout, data) ->
-  view = fs.readFileSync "./src/_views/#{layout}.html", encoding: 'utf-8'
-  template = Handlebars.compile view
-  template data
 
 gulp.task 'build', ->
   data()
