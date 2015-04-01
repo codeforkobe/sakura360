@@ -6,9 +6,9 @@ fs = require 'fs'
 gulp = require 'gulp'
 gutil = require 'gulp-util'
 Handlebars = require 'handlebars'
-mkdirp = require 'mkdirp'
 moment = require 'moment'
 path = require 'path'
+write = require './src/_scripts/write'
 
 generateSite = (site) ->
   # render index html
@@ -44,12 +44,6 @@ render = (layout, data) ->
   view = fs.readFileSync "./src/_views/#{layout}.html", encoding: 'utf-8'
   template = Handlebars.compile view
   template data
-
-write = (file, data) ->
-  filePath = path.resolve file
-  dirname = path.dirname filePath
-  mkdirp.sync dirname
-  fs.writeFileSync filePath, data, encoding: 'utf-8'
 
 gulp.task 'build', ->
   data()
