@@ -1,20 +1,14 @@
+{Promise} = require 'es6-promise'
 del = require 'del'
+exec = require './src/_scripts/exec'
 fs = require 'fs'
+getSpots = require './src/_scripts/get-spots'
 gulp = require 'gulp'
 gutil = require 'gulp-util'
 Handlebars = require 'handlebars'
 mkdirp = require 'mkdirp'
 moment = require 'moment'
 path = require 'path'
-{exec} = require 'child_process'
-{Promise} = require 'es6-promise'
-getSpots = require './src/_scripts/get-spots'
-
-execPromise = (command, options) ->
-  new Promise (resolve, reject) ->
-    exec command, options, (err, stdout, stderr) ->
-      return reject(err) if err?
-      resolve { stdout, stderr }
 
 generateSpots = ->
   config =
@@ -115,30 +109,30 @@ gulp.task 'deploy', ['clean'], ->
   dst = 'gh-pages'
   dir = './public'
 
-  execPromise "git clone --branch #{dst} #{url} #{dir}"
+  exec "git clone --branch #{dst} #{url} #{dir}"
   .then ({ stdout, stderr }) ->
     gutil.log stdout
     gutil.log stderr
     generateSiteData()
     .then generateSite
   .then ->
-    execPromise 'git add --all', cwd: dir
+    exec 'git add --all', cwd: dir
   .then ({ stdout, stderr }) ->
     gutil.log stdout
     gutil.log stderr
-    execPromise "git config --local user.name circleci", cwd: dir
+    exec "git config --local user.name circleci", cwd: dir
   .then ({ stdout, stderr }) ->
     gutil.log stdout
     gutil.log stderr
-    execPromise "git config --local user.email circleci@example.com", cwd: dir
+    exec "git config --local user.email circleci@example.com", cwd: dir
   .then ({ stdout, stderr }) ->
     gutil.log stdout
     gutil.log stderr
-    execPromise "git commit --message '#{message}'", cwd: dir
+    exec "git commit --message '#{message}'", cwd: dir
   .then ({ stdout, stderr }) ->
     gutil.log stdout
     gutil.log stderr
-    execPromise "git push --force '#{url}' #{dst}:#{dst}", cwd: dir
+    exec "git push --force '#{url}' #{dst}:#{dst}", cwd: dir
   .then ({ stdout, stderr }) ->
     gutil.log stdout
     gutil.log stderr
