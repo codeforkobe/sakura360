@@ -1,57 +1,14 @@
 {Promise} = require 'es6-promise'
+data = require './src/_scripts/data'
 del = require 'del'
 exec = require './src/_scripts/exec'
 fs = require 'fs'
-getSpots = require './src/_scripts/get-spots'
 gulp = require 'gulp'
 gutil = require 'gulp-util'
 Handlebars = require 'handlebars'
 mkdirp = require 'mkdirp'
 moment = require 'moment'
 path = require 'path'
-
-generateSpots = ->
-  config =
-    email: process.env.SAKURA360_SPOT_SHEET_EMAIL
-    key: JSON.parse process.env.SAKURA360_SPOT_SHEET_KEY
-    sheetKey: process.env.SAKURA360_SPOT_SHEET_SHEET_KEY
-  getSpots config
-
-generateSiteData = ->
-  spots = null
-
-  generateSpots()
-  .then (s) ->
-    spots = s
-  .then ->
-    photos = [
-      spot_id: 'ojizoo'
-      type: 'theta'
-      author: 'bouzuya'
-      created_at: new Date(moment().valueOf())
-      url: 'http://example.com/ozizoo.jpg'
-    ]
-
-    # merge photos to spots.photos
-    photos.forEach (photo) ->
-      spot = spots.filter((spot) -> spot.id is photo.spot_id)[0]
-      return unless spot?
-      spot.photos.push photo
-
-    # sort spots.photos
-    spots.forEach (spot) ->
-      spot.photos.sort (a, b) ->
-        ad = moment a.created_at
-        bd = moment b.created_at
-        if ad.isBefore bd
-          -1
-        else if ad.isAfter bd
-          1
-        else
-          0
-
-    # build site data
-    site = { spots }
 
 generateSite = (site) ->
   # render index html
@@ -95,7 +52,7 @@ write = (file, data) ->
   fs.writeFileSync filePath, data, encoding: 'utf-8'
 
 gulp.task 'build', ->
-  generateSiteData()
+  data()
   .then generateSite
 
 gulp.task 'clean', (done) ->
@@ -113,7 +70,7 @@ gulp.task 'deploy', ['clean'], ->
   .then ({ stdout, stderr }) ->
     gutil.log stdout
     gutil.log stderr
-    generateSiteData()
+    data()
     .then generateSite
   .then ->
     exec 'git add --all', cwd: dir
