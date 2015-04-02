@@ -24,6 +24,7 @@ module.exports = ({ email, key }, sheetKey)->
         spots.concat [spot]
     , []
     .filter (i) -> i.row isnt 1 and i.id? and i.name?
+    .sort (a, b) -> if a.row < b.row then -1 else if a.row > b.row then 1 else 0
     .map (i) ->
       id: i.id     # syukugawa
       name: i.name # 夙川公園

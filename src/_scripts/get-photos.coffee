@@ -30,6 +30,7 @@ module.exports = ({ email, key }, sheetKey)->
         photos.concat [photo]
     , []
     .filter (i) -> i.row isnt 1 and i.spot_id? and i.url?
+    .sort (a, b) -> if a.row < b.row then -1 else if a.row > b.row then 1 else 0
     .map (i) ->
       spot_id: i.spot_id
       type: i.type
