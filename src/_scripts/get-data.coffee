@@ -5,13 +5,13 @@ moment = require 'moment'
 module.exports = ->
   spots = null
   credentials =
-    email: process.env.SAKURA360_SPOT_SHEET_EMAIL
-    key: JSON.parse process.env.SAKURA360_SPOT_SHEET_KEY
-  getSpots credentials, process.env.SAKURA360_SPOT_SHEET_SHEET_KEY
+    email: process.env.SAKURA360_GOOGLE_API_CLIENT_EMAIL
+    key: JSON.parse process.env.SAKURA360_GOOGLE_API_PRIVATE_KEY
+  getSpots credentials, process.env.SAKURA360_SPOT_SHEET_KEY
   .then (s) ->
     spots = s
   .then ->
-    getPhotos credentials, process.env.SAKURA360_PHOTO_SHEET_SHEET_KEY
+    getPhotos credentials, process.env.SAKURA360_PHOTO_SHEET_KEY
   .then (photos) ->
     # merge photos to spots.photos
     photos.forEach (photo) ->
