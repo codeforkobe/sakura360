@@ -1,6 +1,6 @@
 newClient = require './google-sheet'
 
-module.exports = ({ email, key, sheetKey })->
+module.exports = ({ email, key }, sheetKey)->
   config = { email, key, sheetKey }
   client = newClient({ email: config.email, key: config.key })
   spreadsheet = client.getSpreadsheet(config.sheetKey)
@@ -18,9 +18,12 @@ module.exports = ({ email, key, sheetKey })->
         spot.name = i.value if i.col is 3
         spots
       else
-        spots.concat [i]
+        spot = i
+        spot.id = i.value if i.col is 2
+        spot.name = i.value if i.col is 3
+        spots.concat [spot]
     , []
-    .filter (i) -> i.id? and i.name?
+    .filter (i) -> i.row isnt 1 and i.id? and i.name?
     .map (i) ->
       id: i.id     # syukugawa
       name: i.name # 夙川公園
