@@ -1,4 +1,5 @@
 {Promise} = require 'es6-promise'
+browserSync = require 'browser-sync'
 buildSite = require './src/_scripts/build-site'
 del = require 'del'
 deploy = require './src/_scripts/deploy'
@@ -20,16 +21,24 @@ gulp.task 'build-site', ->
   getData()
   .then buildSite
 
+gulp.task 'clean', (done) ->
+  del [
+    './public'
+  ], done
+
 gulp.task 'copy-files', ->
   srcDir = './src'
   files = getFiles srcDir
   gulp.src files, base: srcDir
     .pipe gulp.dest './public'
 
-gulp.task 'clean', (done) ->
-  del [
-    './public'
-  ], done
+gulp.task 'default', (done) ->
+  run = require 'run-sequence'
+  run.apply run, [
+    'clean'
+    'build'
+    done
+  ]
 
 gulp.task 'deploy', ['clean'], ->
   message = moment().format() # commit message
@@ -43,10 +52,9 @@ gulp.task 'deploy', ['clean'], ->
     .then buildSite
   deploy { message, url, dst, dir, name, email, build }
 
-gulp.task 'default', (done) ->
-  run = require 'run-sequence'
-  run.apply run, [
-    'clean'
-    'build'
-    done
-  ]
+gulp.task 'watch', ->
+  browserSync
+    server:
+      baseDir: './public/'
+
+  gulp.watch './public/', [browserSync.reload]
