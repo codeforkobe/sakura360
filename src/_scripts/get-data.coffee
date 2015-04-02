@@ -1,28 +1,18 @@
 getSpots = require './get-spots'
+getPhotos = require './get-photos'
 moment = require 'moment'
-
-generateSpots = ->
-  config =
-    email: process.env.SAKURA360_SPOT_SHEET_EMAIL
-    key: JSON.parse process.env.SAKURA360_SPOT_SHEET_KEY
-    sheetKey: process.env.SAKURA360_SPOT_SHEET_SHEET_KEY
-  getSpots config
 
 module.exports = ->
   spots = null
-
-  generateSpots()
+  credentials =
+    email: process.env.SAKURA360_SPOT_SHEET_EMAIL
+    key: JSON.parse process.env.SAKURA360_SPOT_SHEET_KEY
+  getSpots credentials, process.env.SAKURA360_SPOT_SHEET_SHEET_KEY
   .then (s) ->
     spots = s
   .then ->
-    photos = [
-      spot_id: 'ojizoo'
-      type: 'theta'
-      author: 'bouzuya'
-      created_at: new Date(moment().valueOf())
-      url: 'http://example.com/ozizoo.jpg'
-    ]
-
+    getPhotos credentials, process.env.SAKURA360_PHOTO_SHEET_SHEET_KEY
+  .then (photos) ->
     # merge photos to spots.photos
     photos.forEach (photo) ->
       spot = spots.filter((spot) -> spot.id is photo.spot_id)[0]
