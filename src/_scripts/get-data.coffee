@@ -3,15 +3,26 @@ getPhotos = require './get-photos'
 moment = require 'moment'
 
 module.exports = ->
+  config =
+    email: 'SAKURA360_GOOGLE_API_CLIENT_EMAIL'
+    key: 'SAKURA360_GOOGLE_API_PRIVATE_KEY'
+    spotSheetKey: 'SAKURA360_SPOT_SHEET_KEY'
+    photoSheetKey: 'SAKURA360_PHOTO_SHEET_KEY'
+
+  for k, v of config
+    value = process.env[v]
+    throw new Error("export #{v}='...'") unless value?
+    config[k] = value
+
   spots = null
   credentials =
-    email: process.env.SAKURA360_GOOGLE_API_CLIENT_EMAIL
-    key: JSON.parse process.env.SAKURA360_GOOGLE_API_PRIVATE_KEY
-  getSpots credentials, process.env.SAKURA360_SPOT_SHEET_KEY
+    email: config.email
+    key: JSON.parse config.key
+  getSpots credentials, config.spotSheetKey
   .then (s) ->
     spots = s
   .then ->
-    getPhotos credentials, process.env.SAKURA360_PHOTO_SHEET_KEY
+    getPhotos credentials, config.photoSheetKey
   .then (photos) ->
     # merge photos to spots.photos
     photos.forEach (photo) ->
