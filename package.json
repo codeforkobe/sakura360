@@ -9,14 +9,13 @@
     "coffee-script": "^1.9.1",
     "del": "^1.1.1",
     "es6-promise": "^2.0.1",
-    "googleapis": "^2.0.2",
+    "google-sheets-api": "https://github.com/bouzuya/google-sheets-api/archive/0.1.0.tar.gz",
     "gulp": "^3.8.11",
     "gulp-util": "^3.0.4",
     "handlebars": "^3.0.0",
     "mkdirp": "^0.5.0",
     "moment": "^2.9.0",
-    "run-sequence": "^1.0.2",
-    "xml2js": "^0.4.6"
+    "run-sequence": "^1.0.2"
   },
   "homepage": "https://github.com/codeforkobe/sakura360",
   "license": "MIT",
