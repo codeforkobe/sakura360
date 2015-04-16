@@ -1,4 +1,3 @@
-{Promise} = require 'es6-promise'
 browserSync = require 'browser-sync'
 buildSite = require './src/_scripts/build-site'
 del = require 'del'

@@ -1,4 +1,4 @@
-newClient = require './google-sheet'
+newClient = require 'google-sheets-api'
 
 module.exports = ({ email, key }, sheetKey)->
   config = { email, key, sheetKey }
