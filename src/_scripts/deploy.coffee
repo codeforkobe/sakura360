@@ -20,7 +20,7 @@ module.exports = ({ dst, url, dir, name, email, message, build }) ->
   .then ({ stdout, stderr }) ->
     gutil.log stdout
     gutil.log stderr
-    exec "git commit --message '#{message}'", cwd: dir
+    exec "git commit --allow-empty --message '#{message}'", cwd: dir
   .then ({ stdout, stderr }) ->
     gutil.log stdout
     gutil.log stderr
