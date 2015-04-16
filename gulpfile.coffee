@@ -47,8 +47,14 @@ gulp.task 'deploy', ['clean'], ->
   name = 'circleci'
   email = 'circleci@example.com'
   build = ->
-    getData()
-    .then buildSite
+    {Promise} = require 'es6-promise'
+    run = require 'run-sequence'
+    new Promise (resolve) ->
+      run.apply run, [
+        'build-site'
+        'copy-files'
+        resolve
+      ]
   deploy { message, url, dst, dir, name, email, build }
 
 gulp.task 'watch', ->
