@@ -16,4 +16,4 @@ module.exports = (site) ->
     filePath = './public' + pattern.replace /:([^\/]+)/g, (param) ->
       params[param]
     .replace /\/$/, '/index.html'
-    write filePath, render 'spot', spot
+    write filePath, render 'single', spot
