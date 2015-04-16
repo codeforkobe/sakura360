@@ -1,3 +1,131 @@
-body {
-  background-color: #ffd5ec;
+@charset "UTF-8";
+/* html5doctor.com Reset v1.6.1 (http://html5doctor.com/html-5-reset-stylesheet/) - http://cssreset.com */
+html,body,div,span,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,abbr,address,cite,code,del,dfn,em,img,ins,kbd,q,samp,small,strong,sub,sup,var,b,i,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td,article,aside,canvas,details,figcaption,figure,footer,header,hgroup,menu,nav,section,summary,time,mark,audio,video{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}
+body{line-height:1}
+article,aside,details,figcaption,figure,footer,header,hgroup,menu,nav,section{display:block}
+nav ul{list-style:none}
+blockquote,q{quotes:none}
+blockquote:before,blockquote:after,q:before,q:after{content:none}
+a{margin:0;padding:0;font-size:100%;vertical-align:baseline;background:transparent}
+ins{background-color:#ff9;color:#000;text-decoration:none}
+mark{background-color:#ff9;color:#000;font-style:italic;font-weight:bold}
+del{text-decoration:line-through}
+abbr[title],dfn[title]{border-bottom:1px dotted;cursor:help}
+table{border-collapse:collapse;border-spacing:0}
+hr{display:block;height:1px;border:0;border-top:1px solid #ccc;margin:1em 0;padding:0}
+input,select{vertical-align:middle}
+
+body{
+font:normal 62.5%/2 sans-serif;
+background:#fafafa;
+}
+
+header{
+	padding:24px 16px;
+	margin-bottom:0;
+	border-bottom:1px solid #eee;
+	background:#fff;
+}
+
+.media{
+	width:100%;
+	height:auto;
+	display:block;
+	background:#eee;
+	margin-bottom:32px;
+}
+
+blockquote.ricoh-theta-spherical-image{
+	width:100%;
+	height:auto;
+}
+
+h1.title{
+	width:163px;
+	height:40px;
+	display: block;
+	background:url(/images/logo.png) no-repeat;
+	background-size:163px 40px;
+	text-indent:-9999px;
+	margin:0 auto;
+}
+
+h2.header-location{
+	font-family: 'Calligraffitti', cursive;
+	font-size:1.3em;
+	text-align:center;
+	margin-bottom:16px;
+}
+
+h2.header-title{
+	font-family: 'Calligraffitti', cursive;
+	font-size:2em;
+	color:#ccc;
+	text-align:center;
+	margin-bottom:16px;
+}
+
+.wrapper{
+	max-width:960px;
+	height:auto;
+	padding:32px 16px 80px 16px;
+	margin:0 auto;
+}
+
+.itembox{
+	width:100%;
+	height:auto;
+	display:block;
+	margin-bottom:24px;
+	border-bottom:1px solid #eee;
+}
+
+.itembox img{
+	width:100%;
+	height:auto;
+}
+
+#global-navigation{
+	width:auto;
+	margin:16px auto;
+	text-align: center;
+}
+
+footer{
+	padding:8px 16px;
+	border-top:1px solid #eee;
+}
+
+
+
+@media screen and (min-width: 600px) {
+
+	h1.title{
+
+	}
+
+	.itembox{
+		width:32.9%;
+		height:auto;
+		box-sizing: border-box;
+		padding:1.5%;
+		margin-bottom:8px;
+		display:inline-block;
+		border-bottom:0;
+	}
+
+	#global-navigation{
+	position: absolute;
+	top:20px;
+	right:20px;
+	}
+}
+
+@media screen and (min-width: 786px) {
+
+}
+
+
+@media screen and (min-width: 960px) {
+
 }
