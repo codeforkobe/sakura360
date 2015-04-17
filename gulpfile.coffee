@@ -11,6 +11,8 @@ moment = require 'moment'
 gulp.task 'build', (done) ->
   run = require 'run-sequence'
   run.apply run, [
+    'clean'
+    'build-data'
     'build-site'
     'copy-files'
     done
@@ -59,18 +61,20 @@ gulp.task 'deploy', ['clean'], ->
   email = 'circleci@example.com'
   build = ->
     {Promise} = require 'es6-promise'
-    run = require 'run-sequence'
     new Promise (resolve) ->
+      run = require 'run-sequence'
       run.apply run, [
+        'clean'
+        'build-data'
         'build-site'
         'copy-files'
         resolve
       ]
   deploy { message, url, dst, dir, name, email, build }
 
-gulp.task 'watch', ->
+gulp.task 'watch', ['build'], ->
   browserSync
     server:
       baseDir: './public/'
 
-  gulp.watch './public/', [browserSync.reload]
+  gulp.watch './src/**/*', ['build-site', browserSync.reload]
