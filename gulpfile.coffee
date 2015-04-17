@@ -32,6 +32,7 @@ gulp.task 'build-site', ->
 
 gulp.task 'clean', (done) ->
   del [
+    './.tmp'
     './public'
   ], done
 
