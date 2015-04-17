@@ -16,9 +16,19 @@ gulp.task 'build', (done) ->
     done
   ]
 
-gulp.task 'build-site', ->
+gulp.task 'build-data', ->
   getData()
-  .then buildSite
+  .then (site) ->
+    fs = require 'fs'
+    dir = './.tmp/'
+    file = dir + 'site.json'
+    data = JSON.stringify(site)
+    fs.mkdirSync(dir) unless fs.existsSync dir
+    fs.writeFileSync file, data, encoding: 'utf-8'
+
+gulp.task 'build-site', ->
+  site = require './.tmp/site.json'
+  buildSite site
 
 gulp.task 'clean', (done) ->
   del [

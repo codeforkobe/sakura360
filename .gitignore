@@ -1,4 +1,5 @@
 *.log
 .envrc
+.tmp
 node_modules
 public
